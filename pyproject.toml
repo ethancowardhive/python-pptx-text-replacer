@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Utilities",
 ]
 
-dependencies = [ "python-pptx" ]
+dependencies = [ "python-pptx-valutico@git+https://github.com/ethancowardhive/python-pptx" ]
 
 dynamic = [ "version" ]
 
