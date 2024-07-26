@@ -7,4 +7,4 @@ exclude = [
 ]
 
 [build.targets.wheel]
-packages = ["src/python_pptx_text_replacer"]
+packages = ["src/python_pptx_text_replacer", "py.typed"]
