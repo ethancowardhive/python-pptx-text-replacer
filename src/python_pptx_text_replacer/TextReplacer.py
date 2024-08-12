@@ -35,7 +35,7 @@ from pptx.chart.data import CategoryChartData
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.enum.dml import MSO_COLOR_TYPE
 
-__version__ = "v0.0.7"
+__version__ = "v0.0.8"
 
 
 class TextReplacer:
