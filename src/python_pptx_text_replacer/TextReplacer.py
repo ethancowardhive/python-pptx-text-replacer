@@ -22,20 +22,17 @@ import re
 from typing import Optional
 import unicodedata
 
-if sys.version_info[0] == 3:
-    PY2 = False
-    import collections
-    import collections.abc
-else:
-    PY2 = True
+import collections
+import collections.abc
 
 from pptx import Presentation
+from pptx.presentation import Presentation as PresentationType
 from pptx.dml.color import RGBColor
 from pptx.chart.data import CategoryChartData
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.enum.dml import MSO_COLOR_TYPE
 
-__version__ = "v0.0.8"
+__version__ = "v0.0.9"
 
 
 class TextReplacer:
@@ -46,7 +43,7 @@ class TextReplacer:
 
     def __init__(
         self,
-        presentation_file_name: str,
+        presentation_file_name: str | PresentationType,
         tables: bool = True,
         charts: bool = True,
         textframes: bool = True,
@@ -54,15 +51,24 @@ class TextReplacer:
         verbose: bool = False,
         quiet: bool = False,
     ):
-        self._messages = []
-        self._replacements = []
+        self._messages: list[str] = []
+        self._replacements: list[tuple[str, str]] = []
         self._collected_replacements: list[tuple[str, str]] = []
-        self._presentation_file_name = self._ensure_unicode(presentation_file_name)
-        if not os.path.exists(self._presentation_file_name):
-            raise ValueError(
-                "Presentation file %s does not exist." % (self._presentation_file_name)
+
+        if isinstance(presentation_file_name, str):
+            self._presentation_file_name = self._ensure_unicode(presentation_file_name)
+            if not os.path.exists(self._presentation_file_name):
+                raise ValueError(
+                    "Presentation file %s does not exist."
+                    % (self._presentation_file_name)
+                )
+            self._presentation = Presentation(presentation_file_name)
+        else:
+            self._presentation = presentation_file_name
+            self._presentation_file_name = (
+                f"Directly passed presentation: {id(presentation_file_name)}"
             )
-        self._presentation = Presentation(presentation_file_name)
+
         self._tables = tables
         self._charts = charts
         self._textframes = textframes
@@ -226,7 +232,7 @@ class TextReplacer:
             print(text)
 
     def _ensure_unicode(self, text: str | bytes) -> str:
-        if isinstance(text, (str, bytes) if PY2 else bytes):
+        if isinstance(text, bytes):
             return text.decode("UTF-8")
         return text
 
