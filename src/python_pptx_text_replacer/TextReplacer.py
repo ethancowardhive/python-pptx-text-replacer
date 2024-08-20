@@ -32,7 +32,7 @@ from pptx.chart.data import CategoryChartData
 from pptx.enum.shapes import MSO_SHAPE_TYPE
 from pptx.enum.dml import MSO_COLOR_TYPE
 
-__version__ = "v0.0.9"
+__version__ = "v0.0.10"
 
 
 class TextReplacer:
@@ -75,6 +75,7 @@ class TextReplacer:
         self._default_verbose = verbose
         self._default_quiet = quiet
         self._current_slide_idx = 0
+        self._slides_str = slides.strip()
         slide_cnt = len(self._presentation.slides)
         if len(slides.strip()) == 0:
             self._slides = [True] * slide_cnt
@@ -195,7 +196,7 @@ class TextReplacer:
                         else slide.shapes.title.text,
                     )
                 )
-            if self._slides[self._current_slide_idx]:
+            if self._slides[self._current_slide_idx] or len(self._slides_str) == 0:
                 self._process_shapes(2, slide)
             else:
                 if self._verbose:
